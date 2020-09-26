@@ -1,0 +1,145 @@
+<!-- <app-profile-nav></app-profile-nav> -->
+<div class="userprofile">
+    <div class="profile-header">
+        <button mat-button class="signout-btn" color="primary" type="button" (click)="signOut()">Sign Out</button>
+        <div class="user-details">
+            <h2>Welcome {{userFullname}}</h2>
+            <br>
+        </div>
+    </div>
+    <div class="user-profile-wrapper">
+        <div class="userprofile-container container">
+            <h3>Pls fill in General Profile Information</h3>
+            <form [formGroup]="profileInformationForm">
+                <ng-container>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Marital Status</mat-label>
+                        <mat-select name="food" formControlName="statusMarital">
+                          <mat-option *ngFor="let status of maritalStatus" [value]="status" >
+                            {{status}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <br>
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Years of Experience" formControlName="yearsExp">
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Date of Birth</mat-label>
+                        <input matInput [matDatepicker]="dp3" [min]="minBirthDate" [max]="maxBirthDate" formControlName="birthDate" >
+                        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                        <mat-datepicker #dp3 ></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field class="example-full-width">
+                        <input type="text"
+                                placeholder="Nationality"
+                                aria-label="Text"
+                                matInput
+                                [formControl]="nationalityControl"
+                                [matAutocomplete]="auto"
+                                formControlName="nationality">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option #matOption (click)="nationalityEvent(matOption.value)" *ngFor="let option of natFilteredOptions | async" [value]="option">
+                            {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        </mat-form-field>
+                    <br>
+                    <mat-form-field class="example-full-width">
+                        <input type="text"
+                                placeholder="Country"
+                                aria-label="Text"
+                                matInput
+                                [formControl]="countryControl"
+                                [matAutocomplete]="autocountry"
+                                formControlName="country">
+                        <mat-autocomplete #autocountry="matAutocomplete">
+                            <mat-option #matOption (click)="countryEvent(matOption.value)" *ngFor="let country of countryFilteredOption | async" [value]="country">
+                                {{country}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field class="example-full-width">
+                        <input type="text"
+                                placeholder="City"
+                                aria-label="Text"
+                                matInput
+                                [formControl]="cityControl"
+                                [matAutocomplete]="autocity"
+                                formControlName="city">
+                        <mat-autocomplete #autocity="matAutocomplete">
+                            <mat-option #matOption (click)="cityEvent(matOption.value)" *ngFor="let city of cityFilteredOption | async" [value]="city">
+                                {{city}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <input matInput type="text" placeholder="Mobile Number" formControlName="mobileNumber">
+                    </mat-form-field>
+                </ng-container>
+                <br>
+                <button mat-button color="primary" type="button" [disabled]="profileInformationForm.invalid" (click)="onsubmit(profileInformationForm.value)">Submit</button>
+            </form>
+        </div>
+        <div class="userprofile-datas container">
+            <ng-container *ngIf="getGenInfoDatas">
+                <div class="general-info">
+                    <h2>{{userFullname}} General Information</h2>
+                    <br>
+                        <div class="data"> <span class="data.name"> Full Name: </span> {{userFullname}} </div>
+                        <div class="data"> <span class="data.name"> Marital Status: </span> {{getGenInfoDatas.statusMarital}} </div>
+                        <div class="data"> <span class="data.name"> Years of Experience: </span> {{getGenInfoDatas.yearsExp}} </div>
+                        <div class="data"> <span class="data.name"> Birthdate: </span> {{getGenInfoDatas.birthDate | date}} </div>
+                        <div class="data"> <span class="data.name"> Nationality: </span> {{getGenInfoDatas.nationality}} </div>
+                        <div class="data"> <span class="data.name"> Country: </span> {{getGenInfoDatas.country}} </div>
+                        <div class="data"> <span class="data.name"> City: </span> {{getGenInfoDatas.city}} </div>
+                        <div class="data"> <span class="data.name"> Mobile Number: </span> {{getGenInfoDatas.mobileNumber}} </div>
+                        
+                        <br>
+                        <!-- <div *ngIf="isEducationAdded" class="education-info"> -->
+                        <div class="education-info">
+                            <h3>Education</h3>
+                            <div class="data"> <span class="data.name"> Mobile Number: </span> {{getGenInfoDatas.mobileNumber}} </div>
+                        </div>
+                </div>
+            </ng-container>
+            <div class="education">
+                <div class="education-container">
+                    <h2>Education</h2>
+                    <form [formGroup]="educForm">
+                        <div formArrayName="educations">
+                            <div class="educ-row" *ngFor="let education of educForm.get('educations').controls; let i = index"
+                                [formGroupName]="i">
+                                <mat-form-field class="educ-fields">
+                                    <input matInput type="text" placeholder="Degree" formControlName="degree">
+                                </mat-form-field>
+                                <mat-form-field class="educ-fields">
+                                    <input  matInput type="text" placeholder="University" formControlName="universityName">
+                                </mat-form-field>
+                                <mat-form-field class="educ-fields">
+                                    <input  matInput type="text" placeholder="GPA" formControlName="gpa">
+                                </mat-form-field>
+                                <div class="educ-buttons">
+                                    <button class="float-left" mat-icon-button color="primary" aria-label="Remove/clear"
+                                        (click)="removeOrClearEduc(i)" matTooltip="Remove">
+                                    <mat-icon>highlight_off</mat-icon>
+                                    </button>
+                                    <button class="float-left" mat-icon-button color="primary" aria-label="Add"
+                                        (click)="addEducFormGroup()" matTooltip="Add">
+                                    <mat-icon>add_circle_outline</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                    <button mat-button color="primary" type="button" [disabled]="educForm.invalid" (click)="onsubmitEducation(educForm.value)">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

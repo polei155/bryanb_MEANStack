@@ -1,0 +1,58 @@
+<div class="container sign-up">
+    <div class="signup-container">
+        <h2>Register Form</h2>
+        <img src="./assets/images/register/ng.png" alt="">
+        <form [formGroup]="signupForm">
+            <mat-form-field>
+                <input matInput type="text" placeholder="Full Name" formControlName="fullName">
+                <mat-error *ngIf="userName.touched">
+                    Please fill in user name
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <input matInput type="text" placeholder="User Name" formControlName="userName">
+                <mat-error *ngIf="userName.touched">
+                    Please fill in user name
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <input matInput type="text" placeholder="Email" formControlName="email">
+                <mat-error *ngIf="email.invalid && email.touched">
+                    Please input valid email
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <input matInput type="text" placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password">
+                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-hint *ngIf="!password.value">Enter your password</mat-hint>
+                <mat-error *ngIf="password.invalid && password.touched">
+                    Password must be atleast 6 characters long
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <button mat-button color="primary" type="button" (click)="onsubmit(signupForm.value)">Submit</button>
+
+            <p class="login-link">Already have account? Click <a routerLink="/signin">here</a> to sign in</p>
+        </form>
+
+        <div *ngIf="registrationSuccess" class="success-message">
+            Your account has <br> been successfully created. 
+        </div>
+    </div>
+    <div *ngIf="hasError" (click)="closeErrorModal()" class="has-error">
+        <div class="error-container">
+            <ng-container *ngIf="resError.length >= 2" class="multiple-error">
+                <p *ngFor="let error of resError">
+                    {{error}}
+                </p>
+            </ng-container>
+            <p *ngIf="resError.length === 1" class="single-error">
+                {{resError}}
+            </p>
+        </div>
+    </div>
+</div>
+<router-outlet></router-outlet>

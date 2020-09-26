@@ -1,0 +1,76 @@
+.userprofile{
+    padding: 20px 10px;
+    .profile-header{
+        position: relative;
+        padding: 0 15px;
+        .signout-btn{
+            position: absolute;
+            right: 2%;
+        }
+    }
+    .user-profile-wrapper{
+        display: flex;
+        flex-direction: row;
+
+        .userprofile-container{
+            width: 30%;
+            form{
+                display: flex;
+                flex-direction: column;
+            }
+        }
+        .userprofile-datas{
+            display: flex;
+            flex-direction: column;
+            .general-info{
+                color: #f9f9f9;
+                background-color: #B52E31;
+                padding: 20px 15px;
+    
+                .data{
+                    padding: 8px;
+                    font-size: 16px;
+                }
+            }
+            .education-container{
+                padding: 20px 15px;
+                .educ-row{
+                    display: flex;
+                    .educ-fields{
+                        margin-right: 15px;
+                    }
+                    .educ-fields:nth-child(1){
+                        flex-basis: 20%;
+                    }
+                    .educ-fields:nth-child(2){
+                        flex-basis: 40%;
+                    }
+                    .educ-fields:nth-child(3){
+                        flex-basis: 10%;
+                    }
+                    .educ-buttons{
+                        flex-basis: 10%;
+                    }
+                }
+                @media only screen and (max-width: 600px) {
+                    mat-form-field:nth-child(3){
+                        width: 110px;
+                    }
+                }
+            }
+        }
+        @media only screen and (max-width: 600px) {
+            display: flex;
+            flex-direction: column;
+            .userprofile-container{
+                width: 100%;
+            }
+            .educ-row{
+                flex-direction: column;
+            }
+            .educ-fields{
+                width: 290px !important;
+            }
+        }
+    }
+}
