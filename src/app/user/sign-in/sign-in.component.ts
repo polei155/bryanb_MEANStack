@@ -44,18 +44,20 @@ export class SignInComponent implements OnInit {
   }
 
   onsubmit(formValues){
+    console.log('formValues', formValues)
     this.userService.login(formValues).subscribe(
       (res) => {
         this.userService.setToken(res['token']);
         this.router.navigateByUrl('/userprofile');
     }),
     (err) => {
+      console.log('ererererer', err)
       this.hasError = true;
       this.errorMessages = err.message;
 
       setTimeout(() => {
         this.hasError = false;
-      }, 4000);
+      }, 3000);
     }
   }
 

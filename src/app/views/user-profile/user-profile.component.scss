@@ -30,6 +30,21 @@
                 .data{
                     padding: 8px;
                     font-size: 16px;
+                    .educ-number{
+                        display: flex;
+                        flex-direction: column;
+                        .data.name{
+                            margin-bottom: 8px;
+                        }
+                        .edit-button{
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: space-between;
+                            mat-icon{
+                                cursor: pointer;
+                            }
+                        }
+                    }
                 }
             }
             .education-container{
@@ -56,6 +71,11 @@
                     mat-form-field:nth-child(3){
                         width: 110px;
                     }
+                }
+            }
+            .attachments{
+                .attachments-container input{
+                    display: none;
                 }
             }
         }

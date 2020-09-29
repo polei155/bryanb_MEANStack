@@ -33,7 +33,7 @@
                 </mat-error>
             </mat-form-field>
             <br>
-            <button mat-button color="primary" type="button" (click)="onsubmit(signupForm.value)">Submit</button>
+            <button mat-button color="primary" type="button" [disabled]="!signupForm.valid" (click)="onsubmit(signupForm.value)">Submit</button>
 
             <p class="login-link">Already have account? Click <a routerLink="/signin">here</a> to sign in</p>
         </form>

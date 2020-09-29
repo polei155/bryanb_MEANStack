@@ -14,15 +14,20 @@
                 <ng-container>
                     <mat-form-field appearance="fill">
                         <mat-label>Marital Status</mat-label>
-                        <mat-select name="food" formControlName="statusMarital">
-                          <mat-option *ngFor="let status of maritalStatus" [value]="status" >
+                        <mat-select name="food" formControlName="statusMarital" (selectionChange)="maritalStatusEvent($event.value)">
+                          <mat-option *ngFor="let status of maritalStatus" [value]="status">
                             {{status}}
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
                       <br>
+                      <mat-form-field *ngIf="isMarriedStatus" appearance="fill">
+                        <mat-label>No. of Dependents</mat-label>
+                            <input matInput type="number" placeholder="No. of Dependents" formControlName="dependents">
+                      </mat-form-field>
+                      <br>
                     <mat-form-field>
-                        <input matInput type="text" placeholder="Years of Experience" formControlName="yearsExp">
+                        <input matInput type="text" placeholder="Years of Experience" appNumberOnly="true" formControlName="yearsExp">
                     </mat-form-field>
                     <br>
                     <mat-form-field appearance="fill">
@@ -78,7 +83,7 @@
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <input matInput type="text" placeholder="Mobile Number" formControlName="mobileNumber">
+                        <input matInput placeholder="Mobile Number" appNumberOnly="true" maxlength="11" formControlName="mobileNumber">
                     </mat-form-field>
                 </ng-container>
                 <br>
@@ -90,21 +95,28 @@
                 <div class="general-info">
                     <h2>{{userFullname}} General Information</h2>
                     <br>
-                        <div class="data"> <span class="data.name"> Full Name: </span> {{userFullname}} </div>
-                        <div class="data"> <span class="data.name"> Marital Status: </span> {{getGenInfoDatas.statusMarital}} </div>
-                        <div class="data"> <span class="data.name"> Years of Experience: </span> {{getGenInfoDatas.yearsExp}} </div>
-                        <div class="data"> <span class="data.name"> Birthdate: </span> {{getGenInfoDatas.birthDate | date}} </div>
-                        <div class="data"> <span class="data.name"> Nationality: </span> {{getGenInfoDatas.nationality}} </div>
-                        <div class="data"> <span class="data.name"> Country: </span> {{getGenInfoDatas.country}} </div>
-                        <div class="data"> <span class="data.name"> City: </span> {{getGenInfoDatas.city}} </div>
-                        <div class="data"> <span class="data.name"> Mobile Number: </span> {{getGenInfoDatas.mobileNumber}} </div>
+                    <div class="data"> <span class="data.name"> Full Name: </span> {{userFullname}} </div>
+                    <div class="data"> <span class="data.name"> Marital Status: </span> {{getGenInfoDatas.statusMarital}} </div>
+                    <div class="data"> <span class="data.name"> Years of Experience: </span> {{getGenInfoDatas.yearsExp}} </div>
+                    <div class="data"> <span class="data.name"> Birthdate: </span> {{getGenInfoDatas.birthDate | date}} </div>
+                    <div class="data"> <span class="data.name"> Nationality: </span> {{getGenInfoDatas.nationality}} </div>
+                    <div class="data"> <span class="data.name"> Country: </span> {{getGenInfoDatas.country}} </div>
+                    <div class="data"> <span class="data.name"> City: </span> {{getGenInfoDatas.city}} </div>
+                    <div class="data"> <span class="data.name"> Mobile Number: </span> {{getGenInfoDatas.mobileNumber}} </div>
                         
-                        <br>
-                        <!-- <div *ngIf="isEducationAdded" class="education-info"> -->
-                        <div class="education-info">
-                            <h3>Education</h3>
-                            <div class="data"> <span class="data.name"> Mobile Number: </span> {{getGenInfoDatas.mobileNumber}} </div>
+                    <br>
+                    <div *ngIf="isEducationAdded" class="education-info">
+                        <h3>Education</h3>
+                        <div class="data" *ngFor="let educ of educationValues.educations; let i = index;"> 
+                            <div class="educ-number">
+                                <h4>Educaiton {{i+1}}</h4>
+                                <span class="edit-button">Edit <mat-icon (click)="editEducation(educ, i)">edit</mat-icon> <mat-icon>save</mat-icon> </span>
+                                <span class="data.name"> Degree: {{educ.degree}} </span>  
+                                <span class="data.name"> University: {{educ.universityName}} </span>  
+                                <span class="data.name"> GPA: {{educ.gpa}} </span>  
+                            </div>
                         </div>
+                    </div>
                 </div>
             </ng-container>
             <div class="education">
@@ -121,7 +133,7 @@
                                     <input  matInput type="text" placeholder="University" formControlName="universityName">
                                 </mat-form-field>
                                 <mat-form-field class="educ-fields">
-                                    <input  matInput type="text" placeholder="GPA" formControlName="gpa">
+                                    <input matInput type="text" appNumberOnly="true"  placeholder="GPA" formControlName="gpa">
                                 </mat-form-field>
                                 <div class="educ-buttons">
                                     <button class="float-left" mat-icon-button color="primary" aria-label="Remove/clear"
@@ -134,10 +146,23 @@
                                     </button>
                                 </div>
                             </div>
-
                         </div>
                     </form>
                     <button mat-button color="primary" type="button" [disabled]="educForm.invalid" (click)="onsubmitEducation(educForm.value)">Submit</button>
+                </div>
+            </div>
+            <div class="attachments">
+                <div class="attachments-container">
+
+                    <input #fileInput type="file" (change)="selectFile($event)" multiple >
+                    <div class="file-names">
+                        <h3>Attachments</h3>
+                        <div *ngFor="let file of fileNameUpload">
+                            {{ file.name }}
+                        </div>
+                    </div>
+                    <button mat-button color="secondary" type="button" (click)="fileInput.click()">Select File</button>
+                    <button mat-button color="primary" type="button" (click)="uploadFiles()">Upload</button>
                 </div>
             </div>
         </div>

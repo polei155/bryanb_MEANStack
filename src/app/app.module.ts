@@ -17,6 +17,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+// import { MatFileUploadModule } from 'angular-material-fileupload';
 
 // routes
 import { appRoutes } from './routes';
@@ -28,6 +29,8 @@ import { CommonModule } from '@angular/common';
 import { AuthGuard } from './auth/auth.guard'
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { ProfileNavComponent } from './views/profile-nav/profile-nav.component';
+import { NumberOnlyDirective } from './directives/number-only.directive';
+
 
 
 @NgModule({
@@ -37,7 +40,8 @@ import { ProfileNavComponent } from './views/profile-nav/profile-nav.component';
     SignUpComponent,
     UserProfileComponent,
     SignInComponent,
-    ProfileNavComponent
+    ProfileNavComponent,
+    NumberOnlyDirective
   ],
   imports: [
     BrowserModule,

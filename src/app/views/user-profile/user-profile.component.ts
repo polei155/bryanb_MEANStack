@@ -19,24 +19,28 @@ export class UserProfileComponent implements OnInit {
 
   profileInformationForm: FormGroup;
 
-  natFilteredOptions: Observable<string[]>;
   countryFilteredOption: Observable<string[]>;
+  natFilteredOptions: Observable<string[]>;
   cityFilteredOption: Observable<string[]>;
 
+  userName: any;
+  fileNameUpload = [];
+  userFullname: any;
   getProfileDatas: any;
   getGenInfoDatas: any;
-  userFullname: any;
-  userName: any;
-  // minBirthDate = moment().subtract(60, 'years').calendar();
-  // maxBirthDate = moment().subtract(18, 'years').calendar();
+  selectedCountry: any;
+  isEditEduc: boolean = false; 
+  isMarriedStatus: boolean = false;
+  isEducationAdded: boolean = false;
   minBirthDate = new Date(1970, 0, 1);
   maxBirthDate = new Date(2002, 0, 1);
-  isEducationAdded: boolean = false;
   maritalStatus = ['Single', 'Married']
 
+  educationValues: any;
+
   natOptions: string[] = [ 'American','Canadian', 'Chinese','Filipino', 'Indian' ]
-  countryOptions: string[] = [ 'America','Canada', 'China','Philippiense', 'India' ]
-  cityOptions: string[] = [ 'New York','Tokyo', 'Manila','New Delhi', 'Beijing' ]
+  countryOptions: string[] = [ 'America','Canada', 'China','Philippines', 'India' ]
+  cityOptions = new Array();
 
   public educForm: FormGroup;
   constructor( private userService: UserService, private router: Router, private fb: FormBuilder ) { }
@@ -103,8 +107,25 @@ export class UserProfileComponent implements OnInit {
   }
 
   onsubmitEducation(educForms){
-    console.log('this.educForm 2', educForms)
+    this.educationValues = Object.assign({}, educForms);
     this.isEducationAdded = true;
+    this.educForm.reset()
+  }
+  
+  editEducation(educObj, i){
+    this.isEditEduc = true;
+
+    this.educForm = this.fb.group({
+      educations: this.fb.array([this.editEducFormGroup(educObj, i)])
+    });
+  }
+
+  private editEducFormGroup(educNumber, index): FormGroup {
+    return new FormGroup({
+      'degree': new FormControl(`${educNumber.degree}`, Validators.required),
+      'universityName': new FormControl(`${educNumber.universityName}`, Validators.required),
+      'gpa': new FormControl(`${educNumber.gpa}`, Validators.required),
+    })
   }
 
   onsubmit(formValue){
@@ -112,6 +133,7 @@ export class UserProfileComponent implements OnInit {
       console.log('resres getUserProfileDatas', res)
     })
     this.getProfileGeneralDatas();
+    this.resetUserProfileForm();
   }
 
   getProfile(){
@@ -151,11 +173,42 @@ export class UserProfileComponent implements OnInit {
       nationality: value
     })
   }
+
   countryEvent(value){
+    console.log('coutnryvalue', value)
+    this.cityOptions = [];
+    let americaCities: string[] = [ 'California', 'Chicago', 'Los Angeles', 'New Jersey', 'New York' ]
+    let canadaCities: string[] = [ 'Calgary', 'Montreal', 'Ottawa', 'Quebec', 'Victoria' ]
+    let chinaCities: string[] = [ 'Beijing', 'Shanghai', 'Chengdu', 'Chongqing', 'Tianjin' ]
+    let indiaCities: string[] = [ 'Bengaluru', 'Chennai', 'Jaipur', 'Mumbai', 'New Delhi', ]
+    let philCities: string[] = [ 'Cavite City', 'Dasmarinas City', 'Davao City', 'Naga City' ]
     this.profileInformationForm.patchValue({
       country: value
     })
+
+    switch(value) {
+      case 'America':
+        this.cityOptions = americaCities
+        break;
+      case 'Canada':
+        this.cityOptions = canadaCities
+        break;
+      case 'China':
+        this.cityOptions = chinaCities
+        break;
+      case 'India':
+        this.cityOptions = indiaCities
+        break;
+      case 'Philippines':
+        this.cityOptions = philCities
+        break;
+      default:
+        // code block
+    }
+
+    this.initCityAutoComplete();
   }
+
   cityEvent(value){
     this.profileInformationForm.patchValue({
       city: value
@@ -167,6 +220,7 @@ export class UserProfileComponent implements OnInit {
     this.initCountryAutoComplete();
     this.initCityAutoComplete();
   }
+
   initAutoComplete(){
     this.natFilteredOptions = this.nationalityControl.valueChanges
       .pipe(
@@ -174,6 +228,7 @@ export class UserProfileComponent implements OnInit {
         map(value => this._filter(value))
       );
   }
+
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.natOptions.filter(option => option.toLowerCase().includes(filterValue));
@@ -201,6 +256,28 @@ export class UserProfileComponent implements OnInit {
   private _filterCity(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.cityOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  maritalStatusEvent(event){
+    if(event == 'Married'){
+      this.isMarriedStatus = true;
+      this.profileInformationForm.addControl('dependents', new FormControl('', Validators.required));
+    }
+  }
+
+  resetUserProfileForm(){
+    this.profileInformationForm.reset();
+  }
+
+  selectFile(e){
+    this.fileNameUpload = e.target.files;
+  }
+
+  uploadFiles(){
+    if(this.fileNameUpload.length < 1){
+      console.log('NOT UPLOADED')
+    }
+    console.log('this.fileNameUpload', this.fileNameUpload)
   }
 
 }
